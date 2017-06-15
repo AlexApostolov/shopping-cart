@@ -26,8 +26,3 @@ render (
     <BooksList />
   </Provider>, document.getElementById('app')
 );
-// STEP 2 create and dispatch actions
-// An action is made by an object that has 2 properties: type and payload
-// store.dispatch(postBooks(
-//
-// ));
