@@ -1,7 +1,7 @@
 "use strict";
 import React from 'react';
 import {connect} from 'react-redux';
-import {Panel, Col, Row, Well, Button, ButtonGroup, Label} from 'react-bootstrap';
+import {Modal, Panel, Col, Row, Well, Button, ButtonGroup, Label} from 'react-bootstrap';
 import {bindActionCreators} from 'redux';
 import {deleteCartItem, updateCart} from '../../actions/cartActions';
 
@@ -32,6 +32,22 @@ class Cart extends React.Component {
       this.props.updateCart(_id, -1);
     }
 
+  }
+
+  // Initialize the modal state to false so it won't be displayed until checkout button is clicked
+  constructor() {
+    super();
+    this.state = {
+      showModal: false
+    }
+  }
+
+  open() {
+    this.setState({showModal: true});
+  }
+
+  close() {
+    this.setState({showModal: false});
   }
 
   render() {
@@ -76,6 +92,29 @@ class Cart extends React.Component {
     return (
       <Panel header="Cart" bsStyle="primary">
         {cartItemsList}
+        <Row>
+          <Col xs={12}>
+            <h6>Total amount: {this.props.totalAmount}</h6>
+            <Button onClick={this.open.bind(this)} bsStyle="success" bsSize="small">
+              PROCEED TO CHECKOUT
+            </Button>
+          </Col>
+        </Row>
+        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Thank you!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h6>Your order has been saved</h6>
+            <p>You will receive an email confirmation</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Col xs={6}>
+              <h6>total $: {this.props.totalAmount}</h6>
+            </Col>
+            <Button onClick={this.close.bind(this)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
       </Panel>
     );
   }
@@ -83,7 +122,8 @@ class Cart extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    cart: state.cart.cart
+    cart: state.cart.cart,
+    totalAmount: state.cart.totalAmount
   }
 }
 
