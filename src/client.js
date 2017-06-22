@@ -10,6 +10,7 @@ import {applyMiddleware, createStore} from 'redux';
 // Have middleware that logs all actions showing previous state & next one
 // providing visibility on how the store is behaving
 import logger from 'redux-logger';
+import thunk from 'redux-thunk';
 
 // IMPORT COMBINED REDUCERS
 import reducers from './reducers/index';
@@ -18,7 +19,7 @@ import {addToCart} from './actions/cartActions';
 import {postBooks, deleteBooks, updateBooks} from './actions/booksActions';
 
 // STEP 1 create the store
-const middleware = applyMiddleware(logger); // "logger" is exported by default so no parens needed
+const middleware = applyMiddleware(thunk, logger); // "logger" is exported by default so no parens needed
 const store = createStore(reducers, middleware);
 
 import BooksList from './components/pages/booksList';
