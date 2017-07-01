@@ -27,7 +27,8 @@ class BookItem extends React.Component {
         this.props.addToCart(book);
       } else {
         // WE NEED TO UPDATE THE QUANTITY
-        this.props.updateCart(_id, 1);
+        // Pass the cart to this component so that multiple clicks on the "Buy now" button also updates the cart
+        this.props.updateCart(_id, 1, this.props.cart);
       }
     } else {
       // CART IS EMPTY: just add product to the cart

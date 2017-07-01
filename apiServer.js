@@ -3,6 +3,10 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+const session = require('express-session');
+// Save session data captured in Express into mongodb
+const MongoStore = require('connect-mongo')(session);
+
 var app = express();
 
 // uncomment after placing your favicon in /public
@@ -14,6 +18,36 @@ app.use(cookieParser());
 // APIs
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/bookshop');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, '# MongoDB - connection error: '));
+
+// ---->>> SET UP SESSIONS <<<----
+app.use(session({
+  secret: 'mySecretString',
+  saveUninitialized: false, // Record a session only if user adds a product to cart
+  resave: false, // Don't resave if nothing changed
+  cookie: {maxAge: 1000 * 60 * 60 * 24 * 2}, // 2 days in milliseconds
+  store: new MongoStore({mongooseConnection: db, ttl: 2 * 24 * 60 * 60}) // Set expiration for when to automatically remove session from database (Time To Leave: 2 days * 24 hours * 60 minutes * 60 seconds)
+}));
+// SAVE SESSION CART API
+app.post('/cart', function(req, res) {
+  var cart = req.body;
+  req.session.cart = cart;
+  req.session.save(function(err) {
+    if(err) {
+      throw err;
+    }
+    res.json(req.session.cart);
+  });
+});
+// GET SESSION CART API--verify
+app.get('/cart', function(req, res) {
+  if (typeof req.session.cart !== 'undefined') {
+    res.json(req.session.cart);
+  }
+});
+// ---->>> END SESSIONS SET UP <<<----
 
 var Books = require('./models/books.js');
 

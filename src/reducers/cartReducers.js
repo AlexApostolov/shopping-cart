@@ -11,28 +11,11 @@ export function cartReducers(state={cart: []}, action) {
       };
       break;
     case 'UPDATE_CART':
-      // Create a copy of the current cart array
-      const currentBookToUpdate = [...state.cart];
-      // Determine at which index in cart array book quantity needs to be updated
-      const indexToUpdate = currentBookToUpdate.findIndex(
-        function(book) {
-          return book._id === action._id;
-        }
-      );
-      // id property was passed directly from action above so payload keyword won't be needed below
-      // Update quantity of the current selected book plus the units to increase the quantity
-      const newBookToUpdate = {
-        ...currentBookToUpdate[indexToUpdate],
-        quantity: currentBookToUpdate[indexToUpdate].quantity + action.unit
-      };
-      // Pass the updated cart to variable cartUpdate
-      let cartUpdate = [...currentBookToUpdate.slice(0, indexToUpdate), newBookToUpdate, ...currentBookToUpdate.slice(indexToUpdate + 1)];
-      // Then append it to the state
       return {
         ...state,
-        cart: cartUpdate,
-        totalAmount: totals(cartUpdate).amount,
-        totalQty: totals(cartUpdate).qty
+        cart: action.payload, // update of the cart array must be done BEFORE the reducer
+        totalAmount: totals(action.payload).amount,
+        totalQty: totals(action.payload).qty
       };
       break;
     case 'DELETE_CART_ITEM':

@@ -22,14 +22,16 @@ class Cart extends React.Component {
   }
 
   onIncrement(_id) {
-    this.props.updateCart(_id, 1);
+    // Dispatch current cart array as 3rd argument
+    this.props.updateCart(_id, 1, this.props.cart);
   }
 
   // To prevent decrementing to negative numbers we need to pass the current quantity from the onClick event
   // to check it it is greater than 1
   onDecrement(_id, quantity) {
     if (quantity > 1) {
-      this.props.updateCart(_id, -1);
+      // Dispatch current cart array as 3rd argument
+      this.props.updateCart(_id, -1, this.props.cart);
     }
 
   }
