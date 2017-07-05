@@ -27,7 +27,7 @@ app.use(session({
   secret: 'mySecretString',
   saveUninitialized: false, // Record a session only if user adds a product to cart
   resave: false, // Don't resave if nothing changed
-  cookie: {maxAge: 1000 * 60 * 60 * 24 * 2}, // 2 days in milliseconds
+  cookie: {maxAge: 1000 * 60 * 60 * 24 * 2}, // Remove cookie in 2 days in milliseconds
   store: new MongoStore({mongooseConnection: db, ttl: 2 * 24 * 60 * 60}) // Set expiration for when to automatically remove session from database (Time To Leave: 2 days * 24 hours * 60 minutes * 60 seconds)
 }));
 // SAVE SESSION CART API
@@ -46,6 +46,7 @@ app.get('/cart', function(req, res) {
   if (typeof req.session.cart !== 'undefined') {
     res.json(req.session.cart);
   }
+  // Otherwise, do nothing
 });
 // ---->>> END SESSIONS SET UP <<<----
 
