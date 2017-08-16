@@ -16,26 +16,18 @@ import thunk from 'redux-thunk';
 import reducers from './reducers/index';
 // IMPORT ACTIONS
 import {addToCart} from './actions/cartActions';
-import {postBooks, deleteBooks, updateBooks} from './actions/booksActions';
 
 // STEP 1 create the store
 const middleware = applyMiddleware(thunk, logger); // "logger" is exported by default so no parens needed
-const store = createStore(reducers, middleware);
+// WE WILL PASS INITIAL STATE FROM SERVER STORE
+const initialState = window.INITIAL_STATE;
+const store = createStore(reducers, initialState, middleware);
 
-import BooksList from './components/pages/booksList';
-import Cart from './components/pages/cart';
-import BooksForm from './components/pages/booksForm';
-import Main from './main';
-
+// Use "routes" in place of the router tags
+import routes from './routes';
 const Routes = (
   <Provider store={store}>
-      <Router history={browserHistory}>
-        <Route path="/" component={Main}>
-          <IndexRoute component={BooksList} />
-          <Route path="/admin" component={BooksForm} />
-          <Route path="/cart" component={Cart} />
-        </Route>
-      </Router>
+      {routes}
   </Provider>
 );
 
